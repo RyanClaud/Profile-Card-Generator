@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Profile Card Generator</title>
+<style>
+  :root {
+    --accent: #2563eb;
+    --bg: #f8fafc;
+    --text: #0f172a;
+    --muted: #475569;
+    --ring: #cbd5e1;
+    --card: #ffffff;
+  }
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif;
+    color: var(--text);
+    background: var(--bg);
+  }
+
+  .container {
+    max-width: 1100px;
+    margin: 40px auto;
+    padding: 0 20px;
+  }
+
+  h1 {
+    font-size: clamp(28px, 4vw, 44px);
+    margin: 0 0 28px;
+    letter-spacing: .5px;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+  }
+
+  @media (max-width: 900px) {
+    .grid { grid-template-columns: 1fr; }
+  }
+
+  .panel {
+    background: var(--card);
+    border: 1px solid var(--ring);
+    border-radius: 16px;
+    padding: 22px;
+    box-shadow: 0 1px 2px rgba(0,0,0,.05);
+  }
+
+  .panel h2 {
+    margin: 0 0 16px;
+    font-size: 28px;
+  }
+
+  .field {
+    margin: 14px 0 0;
+    display: grid;
+    grid-template-columns: 130px 1fr;
+    gap: 12px;
+    align-items: center;
+  }
+
+  .field label {
+    font-weight: 600;
+  }
+
+  .input, textarea, .color {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--ring);
+    border-radius: 10px;
+    font: inherit;
+    background: white;
+    outline: none;
+  }
+
+  textarea {
+    min-height: 90px;
+    resize: vertical;
+  }
+
+  input[type="color"].color {
+    height: 40px;
+    padding: 0;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+
+  .actions {
+    margin-top: 16px;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--accent);
+    color: #fff;
+    border: 0;
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 1px 2px rgba(0,0,0,.1);
+    transition: transform .04s ease, filter .2s ease;
+  }
+
+  .btn:active {
+    transform: translateY(1px);
+  }
+
+  .muted-title {
+    margin: 18px 0 8px;
+    color: var(--muted);
+    font-weight: 800;
+    letter-spacing: .3px;
+  }
+
+  .preview {
+    background: #f1f5f9;
+    border: 1px dashed var(--ring);
+    padding: 14px;
+    border-radius: 12px;
+  }
+
+  .card-wrap {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 20px 0;
+  }
+
+  .card {
+    width: min(100%, 400px); 
+    background: var(--card);
+    border: 5px solid var(--ring);
+    border-radius: 20px;
+    padding: 26px;
+    box-shadow: 0 8px 24px rgba(2,6,23,.06);
+    transition: border-color .3s ease;
+    text-align: center;
+  }
+
+  .profile-img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--accent);
+    margin: 0 auto 16px;
+    background: #e2e8f0;
+    display: block;
+  }
+
+  .card h3 {
+    font-size: 28px;
+    margin: 0 0 8px;
+  }
+
+  .card p {
+    margin: 10px 0;
+    color: var(--text);
+    line-height: 1.5;
+  }
+
+  .heart-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid #f4c7c7;
+    background: #fdecec;
+    padding: 10px 14px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 700;
+    transition: filter .2s ease, transform .04s ease;
+  }
+
+  .heart-btn:active {
+    transform: translateY(1px);
+  }
+
+  .heart {
+    width: 18px;
+    height: 18px;
+    display: inline-block;
+    background: currentColor;
+    -webkit-mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="black" d="M12 21s-6.716-4.59-9.428-7.3a6.43 6.43 0 0 1 9.094-9.094L12 5.84l.334-.334a6.43 6.43 0 1 1 9.094 9.094C18.716 16.41 12 21 12 21Z"/></svg>') center/contain no-repeat;
+    mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="black" d="M12 21s-6.716-4.59-9.428-7.3a6.43 6.43 0 0 1 9.094-9.094L12 5.84l.334-.334a6.43 6.43 0 1 1 9.094 9.094C18.716 16.41 12 21 12 21Z"/></svg>') center/contain no-repeat;
+    color: #e11d48;
+  }
+
+  .likes {
+    margin-top: 12px;
+    font-weight: 600;
+  }
+
+  .hint {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 6px;
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <h1>Profile Card Generator</h1>
+    <div class="grid">
+
+      <!-- Left Panel: Input Form -->
+      <section class="panel">
+        <h2>Enter Your Information</h2>
+
+        <div class="field">
+          <label for="name">Name:</label>
+          <input id="name" class="input" placeholder="Your name" />
+        </div>
+
+        <div class="field">
+          <label for="course">Course:</label>
+          <input id="course" class="input" placeholder="Your course" />
+        </div>
+
+        <div class="field">
+          <label for="bio">Bio:</label>
+          <textarea id="bio" placeholder="Write a short bio..."></textarea>
+        </div>
+
+        <div class="field">
+          <label for="picture">Photo:</label>
+          <input id="picture" type="file" accept="image/*" class="input" />
+          <div class="hint">Upload a square photo (JPG, PNG)</div>
+        </div>
+
+        <div class="field">
+          <label for="fav">Favorite Color:</label>
+          <input id="fav" class="color" type="color" value="#2563eb" />
+        </div>
+
+        <div class="actions">
+          <button id="generate" class="btn" type="button">Generate Profile Card</button>
+        </div>
+
+        <div class="muted-title">Real-Time Preview</div>
+        <div class="preview" id="livePreview">
+          <p><strong>Name:</strong> <span id="pName">—</span></p>
+          <p><strong>Course:</strong> <span id="pCourse">—</span></p>
+          
+        </div>
+      </section>
+
+      <!-- Right Panel: Profile Card -->
+      <section class="panel">
+        <h2>Your Profile Card</h2>
+        <div class="card-wrap">
+          <article class="card" id="card">
+            <img id="cImg" class="profile-img" src="https://via.placeholder.com/100/2563eb/FFFFFF?text=Photo" alt="Profile Picture" />
+            <h3 id="cName">Your Name</h3>
+            <p id="cCourse" style="margin-top:8px">Your Course</p>
+            <p id="cBio">Tell us something about you.</p>
+
+            <button id="likeBtn" class="heart-btn" type="button" aria-pressed="false">
+              <span class="heart" aria-hidden="true"></span>
+              Like
+            </button>
+            <div class="likes"><span id="likeCount">0</span> likes</div>
+          </article>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+<script>
+  
+  const nameEl = document.getElementById('name');
+  const courseEl = document.getElementById('course');
+  const bioEl = document.getElementById('bio');
+  const pictureEl = document.getElementById('picture');
+  const favEl = document.getElementById('fav');
+  const generateBtn = document.getElementById('generate');
+
+  
+  const pName = document.getElementById('pName');
+  const pCourse = document.getElementById('pCourse');
+
+  
+  const cName = document.getElementById('cName');
+  const cCourse = document.getElementById('cCourse');
+  const cBio = document.getElementById('cBio');
+  const cImg = document.getElementById('cImg');
+  const card = document.getElementById('card');
+
+  const likeBtn = document.getElementById('likeBtn');
+  const likeCount = document.getElementById('likeCount');
+
+  const defaultImg = "https://via.placeholder.com/100/2563eb/FFFFFF?text=Photo";
+
+  
+  function renderPreview() {
+    pName.textContent = nameEl.value || '—';
+    pCourse.textContent = courseEl.value || '—';
+    card.style.borderColor = favEl.value || '#2563eb';
+  }
+
+  
+  pictureEl.addEventListener('change', function() {
+    const file = this.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        cImg.src = reader.result;
+        
+      };
+      reader.readAsDataURL(file);
+    } else {
+      cImg.src = defaultImg;
+    }
+  });
+
+  
+  [nameEl, courseEl, favEl].forEach(inp => {
+    inp.addEventListener('input', renderPreview);
+  });
+  renderPreview();
+
+  
+  function generateCard() {
+    cName.textContent = nameEl.value.trim() || 'Your Name';
+    cCourse.textContent = courseEl.value.trim() || 'Your Course';
+    cBio.textContent = bioEl.value.trim() || 'Tell us something about you.';
+    card.style.borderColor = favEl.value || '#2563eb';
+
+    
+    const file = pictureEl.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        cImg.src = reader.result;
+      };
+      reader.readAsDataURL(file);
+    } else if (!cImg.src || cImg.src === defaultImg) {
+      cImg.src = defaultImg;
+    }
+  }
+
+  generateBtn.addEventListener('click', generateCard);
+
+  
+  let liked = false;
+  let count = 0;
+  likeBtn.addEventListener('click', () => {
+    liked = !liked;
+    likeBtn.setAttribute('aria-pressed', String(liked));
+    likeBtn.style.filter = liked ? 'saturate(1.2)' : 'none';
+    count += liked ? 1 : -1;
+    likeCount.textContent = Math.max(0, count);
+  });
+</script>
+</body>
+</html>
